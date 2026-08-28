@@ -9,7 +9,11 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	showInSidebar: true,
 
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
-	mode: "local",
+	mode: "meting",
+
+	// 自动播放：用户首次与页面交互（点击/按键）后开始播放
+	// 注意：浏览器策略禁止完全无交互的自动播放，这是合规前提下的最优体验
+	autoplay: true,
 
 	// 默认音量 (0-1)
 	volume: 0.7,

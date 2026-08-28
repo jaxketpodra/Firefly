@@ -12,6 +12,9 @@ export type MusicPlayerConfig = {
 	// 是否显示歌词
 	showLyrics?: boolean;
 
+	// 是否在用户首次与页面交互（点击/按键）后自动播放
+	autoplay?: boolean;
+
 	// 是否在导航栏显示音乐播放器
 	showInNavbar?: boolean;
 

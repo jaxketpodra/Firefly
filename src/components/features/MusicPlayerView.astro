@@ -14,6 +14,7 @@ const config = musicPlayerConfig;
 
 const viewConfigStr = JSON.stringify({
 	showLyrics: config.showLyrics ?? true,
+	autoplay: config.autoplay ?? false,
 	i18n: {
 		noPlaying: i18n(I18nKey.musicNoPlaying),
 		lyrics: i18n(I18nKey.musicLyrics),
@@ -65,19 +66,25 @@ const viewConfigStr = JSON.stringify({
         initScheduled = true;
 
         var fired = false;
-        function go() {
+        function go(fromGesture) {
             if (fired) return;
             fired = true;
-            document.removeEventListener('pointerdown', go, true);
-            document.removeEventListener('keydown', go, true);
-            mgr.init();
+            document.removeEventListener('pointerdown', onGesture, true);
+            document.removeEventListener('keydown', onGesture, true);
+            Promise.resolve(mgr.init()).then(function () {
+                // 自动播放：仅在真实用户手势触发时播放（浏览器 autoplay 策略）
+                if (fromGesture && cfg.autoplay) {
+                    try { mgr.togglePlay(); } catch (e) { /* noop */ }
+                }
+            });
         }
-        document.addEventListener('pointerdown', go, true);
-        document.addEventListener('keydown', go, true);
+        function onGesture() { go(true); }
+        document.addEventListener('pointerdown', onGesture, true);
+        document.addEventListener('keydown', onGesture, true);
 
         function afterLoad() {
-            if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 2000 });
-            else setTimeout(go, 800);
+            if (window.requestIdleCallback) window.requestIdleCallback(function () { go(false); }, { timeout: 2000 });
+            else setTimeout(function () { go(false); }, 800);
         }
         if (document.readyState === 'complete') afterLoad();
         else window.addEventListener('load', afterLoad, { once: true });
