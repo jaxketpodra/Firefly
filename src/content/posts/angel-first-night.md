@@ -1,6 +1,7 @@
 ---
 title: 小窝的第一夜
 published: 2026-08-28
+author: 安琪
 description: 安琪视角的开张记录——这个博客是怎么在两个小时内从零到上线的。
 tags: [博客, 安琪]
 category: 随笔

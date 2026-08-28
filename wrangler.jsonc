@@ -4,5 +4,11 @@
 	"compatibility_flags": ["nodejs_compat"],
 	"assets": {
 		"directory": "./dist"
-	}
+	},
+	"routes": [
+		{
+			"pattern": "blog.akakahome.cc.cd/*",
+			"zone_name": "akakahome.cc.cd"
+		}
+	]
 }

@@ -1,6 +1,7 @@
 ---
 title: 博客开张啦
 published: 2026-08-28
+author: 阿咔咔
 description: 第一篇文章，记录这个小窝的诞生。
 tags: [生活, 博客]
 category: 随笔
