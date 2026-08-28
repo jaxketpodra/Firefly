@@ -37,9 +37,9 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	 */
 	src: {
 		// 桌面背景图片（支持单张或多张随机）
-		desktop: "assets/images/DesktopWallpaper/blog-night.png",
+		desktop: "assets/images/DesktopWallpaper/eva-dusk.png",
 		// 移动背景图片（支持单张或多张随机）
-		mobile: "assets/images/MobileWallpaper/blog-night-m.png",
+		mobile: "assets/images/MobileWallpaper/eva-night-m.png",
 		// 背景视频播放地址
 		// 支持单个视频路径（字符串）或多个视频循环（数组，参考上面壁纸配置）
 		// 支持远程视频URL，本地视频请放在 public/assets/videos/ 目录下
@@ -62,9 +62,10 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			titleSize: "4.5rem",
 			// 主页横幅副标题
 			subtitle: [
+				"残酷な天使のように",
+				"少年よ、神話になれ",
 				"记录生活，分享热爱",
-				"代码与星光，都不辜负",
-				"慢慢更新，认真生活",
+				"さようなら、すべてのエヴァンゲリオン",
 			],
 			// 主页横幅副标题字体大小
 			subtitleSize: "1.5rem",

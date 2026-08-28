@@ -5,7 +5,7 @@ export const announcementConfig: AnnouncementConfig = {
 	title: "",
 
 	// 公告内容
-	content: "欢迎来到阿咔咔的小窝！博客刚开张，慢慢更新中～",
+	content: "欢迎来到第三新东京市——阿咔咔和安琪的小窝！初号机，启动！",
 
 	// 是否允许用户关闭公告
 	closable: true,

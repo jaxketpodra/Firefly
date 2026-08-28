@@ -65,26 +65,54 @@ const viewConfigStr = JSON.stringify({
         if (initScheduled) return;
         initScheduled = true;
 
-        var fired = false;
-        function go(fromGesture) {
-            if (fired) return;
-            fired = true;
+        var initStarted = false;
+        var soundOn = false; // 已有声播放，防止重复 toggle
+
+        function ensureInit(fromGesture) {
+            if (!initStarted) {
+                initStarted = true;
+                Promise.resolve(mgr.init()).then(function () { afterInit(fromGesture); });
+            } else {
+                afterInit(fromGesture);
+            }
+        }
+
+        function afterInit(fromGesture) {
+            if (!cfg.autoplay) return;
+            try {
+                var st = mgr.getState ? mgr.getState() : null;
+                if (!st || !st.initialized || !st.playlist || !st.playlist.length) return;
+                if (fromGesture) {
+                    // 用户手势：开声。已在有声播放则什么都不做
+                    if (soundOn) { removeGestureListeners(); return; }
+                    soundOn = true;
+                    removeGestureListeners();
+                    if (st.isPlaying) {
+                        if (st.isMuted) mgr.toggleMute(); // 静音播放中 → 开声
+                    } else {
+                        mgr.togglePlay(); // 没在播 → 播
+                    }
+                } else {
+                    // 空闲触发：静音自动播放（浏览器允许 muted autoplay）
+                    if (!st.isPlaying) {
+                        if (!st.isMuted) mgr.toggleMute();
+                        mgr.togglePlay();
+                    }
+                }
+            } catch (e) { /* noop */ }
+        }
+
+        function onGesture() { ensureInit(true); }
+        function removeGestureListeners() {
             document.removeEventListener('pointerdown', onGesture, true);
             document.removeEventListener('keydown', onGesture, true);
-            Promise.resolve(mgr.init()).then(function () {
-                // 自动播放：仅在真实用户手势触发时播放（浏览器 autoplay 策略）
-                if (fromGesture && cfg.autoplay) {
-                    try { mgr.togglePlay(); } catch (e) { /* noop */ }
-                }
-            });
         }
-        function onGesture() { go(true); }
         document.addEventListener('pointerdown', onGesture, true);
         document.addEventListener('keydown', onGesture, true);
 
         function afterLoad() {
-            if (window.requestIdleCallback) window.requestIdleCallback(function () { go(false); }, { timeout: 2000 });
-            else setTimeout(function () { go(false); }, 800);
+            if (window.requestIdleCallback) window.requestIdleCallback(function () { ensureInit(false); }, { timeout: 2000 });
+            else setTimeout(function () { ensureInit(false); }, 800);
         }
         if (document.readyState === 'complete') afterLoad();
         else window.addEventListener('load', afterLoad, { once: true });
