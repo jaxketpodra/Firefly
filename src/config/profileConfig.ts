@@ -12,7 +12,7 @@ export const profileConfig: ProfileConfig = {
 	name: "阿咔咔",
 
 	// 个人签名
-	bio: "记录生活，分享热爱。",
+	bio: "阿咔咔和安琪的小窝。记录生活，分享热爱。",
 
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
