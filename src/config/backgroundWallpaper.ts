@@ -42,10 +42,14 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// 移动背景图片（支持单张或多张随机）
 		mobile: "https://img.akakahome.cc.cd/file/1787974673591_eva-night-m.png",
 		// 背景视频播放地址
-		// 支持单个视频路径（字符串）或多个视频循环（数组，参考上面壁纸配置）
+		// 支持单个视频路径（字符串）、多个视频循环（数组）或横竖分设（对象 desktop/mobile）
 		// 支持远程视频URL，本地视频请放在 public/assets/videos/ 目录下
 		// playerUrl: "/assets/videos/firefly.mp4",
-		playerUrl: "https://img.akakahome.cc.cd/file/1787926062249_fireflies.mp4",
+		// 哥哥的 Wallpaper Engine 视频（横屏=桌面，竖屏=手机）2026-08-29
+		playerUrl: {
+			desktop: "https://img.akakahome.cc.cd/file/1787976180042_ask_v2_web.mp4",
+			mobile: "https://img.akakahome.cc.cd/file/1787976218043_eva_mobile_web.mp4",
+		},
 	},
 	// 横幅壁纸和全屏壁纸共享配置
 	common: {

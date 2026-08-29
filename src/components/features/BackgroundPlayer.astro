@@ -4,13 +4,25 @@ import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 
 export interface Props {
-	playerUrl: string | string[];
+	playerUrl: string | string[] | { desktop?: string; mobile?: string };
 	playerMode?: "order" | "random";
 }
 
 const { playerUrl, playerMode = "order" } = Astro.props;
 
-const urls = Array.isArray(playerUrl) ? playerUrl : [playerUrl];
+// 横竖分设：对象形式 { desktop, mobile }，由脚本按屏幕方向选择
+const isDual =
+	typeof playerUrl === "object" &&
+	!Array.isArray(playerUrl) &&
+	playerUrl !== null;
+const urls = isDual
+	? []
+	: Array.isArray(playerUrl)
+		? playerUrl
+		: [playerUrl];
+const desktopUrl = isDual ? (playerUrl.desktop ?? "") : "";
+const mobileUrl = isDual ? (playerUrl.mobile ?? "") : "";
+const hasDual = !!(desktopUrl || mobileUrl);
 const hasMultiple = urls.length > 1;
 const urlsJson = JSON.stringify(urls);
 
@@ -20,7 +32,7 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 ---
 
 {
-	urls.length > 0 && (
+	(urls.length > 0 || hasDual) && (
 		<div id="bg-player">
 			<div
 				id="bg-player-overlay"
@@ -63,9 +75,17 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 	)
 }
 
-<script is:inline define:vars={{ urls: urlsJson, playerMode, hasMultiple }}>
+<script is:inline define:vars={{ urls: urlsJson, playerMode, hasMultiple, desktopUrl, mobileUrl }}>
 	(() => {
 		var urlList = JSON.parse(urls);
+		// 横竖分设：按屏幕方向选择对应视频
+		if (desktopUrl || mobileUrl) {
+			var isPortrait = window.matchMedia("(orientation: portrait)").matches;
+			var picked = isPortrait
+				? mobileUrl || desktopUrl
+				: desktopUrl || mobileUrl;
+			urlList = picked ? [picked] : [];
+		}
 		if (!urlList.length) return;
 		var isMultiple = urlList.length > 1;
 

@@ -7,7 +7,7 @@ export type BackgroundWallpaperConfig = {
 		| {
 				desktop?: string | string[];
 				mobile?: string | string[];
-				playerUrl?: string | string[]; // 背景视频播放地址，支持单个视频路径或数组（多视频列表循环）
+				playerUrl?: string | string[] | { desktop?: string; mobile?: string }; // 背景视频播放地址，支持单个视频路径、数组（多视频列表循环）或对象（desktop/mobile 按屏幕方向分设）
 		  }; // 支持单个图片、图片数组或分别设置桌面端和移动端图片
 	// 横幅壁纸和全屏壁纸共享配置
 	common?: {
