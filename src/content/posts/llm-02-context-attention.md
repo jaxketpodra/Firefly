@@ -47,6 +47,34 @@ Transformer 架构的核心是注意力——模型生成每个词时，会"回�
 
 **精心设计的 2K token 提示词，效果往往胜过杂乱的 30K token。**
 
+## 新一代模型的注意力不一样了
+
+上面说的"均匀衰减"规律，适用于传统架构（MHA/GQA，以及 DeepSeek V3 时代的 MLA）。但 2026 年的新旗舰走了两条不同的路：
+
+**DeepSeek V4：CSA + HCA 双轨注意力**
+
+V4 干脆把 MLA 换掉了，改成两种压缩注意力交错排布：
+
+- **HCA 层（重压缩）**：把 128 个 token 压成 1 份笔记，做全局速览——建立"整篇文档的地图"
+- **CSA 层（稀疏压缩）**：4 倍压缩 + top-512 检索——在全局理解之上精准定位关键信息
+- 外加 128 token 滑动窗口：最近的内容永远保留原始细节
+
+类比人类读书：**先翻目录速览全文（HCA），再精读关键段落（CSA）**。KV Cache 压到传统架构的 2%，百万上下文才真正能用。
+
+**Kimi K3：KDA + AttnRes**
+
+K3 是另一条路线——自研的 KDA（Kimi Delta Attention）混合线性注意力，加上 Attention Residuals：**每一层都能从前面所有层里选择性检索信息**，而不只是回看原始 token。
+
+### 对你写提示词意味着什么
+
+| | 老架构（V3/K2 及更早） | 新架构（V4/K3） |
+|:---|:---|:---|
+| 长上下文中间的信息 | 明显衰减（Lost in the Middle） | 减轻很多——全局层兜住了结构 |
+| 中间的**精确细节**（数值、原文措辞） | 衰减 | 可能被"速览层"压缩掉细节——粗读记得大概，精读靠检索 |
+| 局部最近的上下文 | 清晰 | 一样清晰（滑窗保留） |
+
+实战结论：**首尾放重点的铁律依然成立**（精确细节别赌检索），但新架构下"超长上下文中部的剧情背景"被记住的概率高了不少。百万上下文不是噱头了——但细节控的规矩不能松。
+
 ## 实战启示：位置就是权力
 
 明白了注意力规律，提示词布局就有了策略：
@@ -91,3 +119,6 @@ ST 的提示词结构天然利用了这个规律：
 
 - [Lost in the Middle 核心原因与解决方案（知乎）](https://zhuanlan.zhihu.com/p/1976405104887361805)
 - [解密 LLM 的上下文窗口与注意力机制（腾讯云）](https://cloud.tencent.com/developer/article/2634030)
+- [DeepSeek-V4 深度解读：百万上下文背后的工程细节（阿里云）](https://developer.aliyun.com/article/1731447)
+- [从 MLA 到 CSA + HCA：DeepSeek 注意力架构的进化之路](https://github.com/ForceInjection/AI-fundamentals/blob/main/09_inference_system/vllm/module_analysis/deepseek_attention_evolution_mla_to_csa_hca.md)
+- [Kimi K3 全面解读（CSDN）](https://aicoding.csdn.net/6a61b33c10ee7a33f291a92a.html)
