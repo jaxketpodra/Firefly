@@ -41,7 +41,9 @@ export const displaySettingsConfig: DisplaySettingsConfig =
 		// ── 壁纸 (Wallpaper) ──────────────────────────────────
 
 		// 壁纸模式切换开关
-		wallpaperModeSwitchable: true,
+		// 关闭原因（2026-08-28）：哥哥浏览器 localStorage 存了旧的 banner 选择会覆盖配置，
+		// 导致改 mode 不生效。关掉后强制使用 backgroundWallpaper.mode 配置值（fullscreen）
+		wallpaperModeSwitchable: false,
 
 		// 水波纹动画开关
 		wavesSwitchable: true,
