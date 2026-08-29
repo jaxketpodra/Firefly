@@ -66,47 +66,40 @@ const viewConfigStr = JSON.stringify({
         initScheduled = true;
 
         var initStarted = false;
-        var soundOn = false; // 已有声播放，防止重复 toggle
+        var wantSound = false; // 用户已交互过：init 完成后直接有声播放
 
-        function ensureInit(fromGesture) {
-            if (!initStarted) {
-                initStarted = true;
-                Promise.resolve(mgr.init()).then(function () { afterInit(fromGesture); });
-            } else {
-                afterInit(fromGesture);
-            }
-        }
-
-        function afterInit(fromGesture) {
-            if (!cfg.autoplay) return;
-            try {
-                var st = mgr.getState ? mgr.getState() : null;
-                if (!st || !st.initialized || !st.playlist || !st.playlist.length) return;
-                if (fromGesture) {
-                    // 用户手势：开声。已在有声播放则什么都不做
-                    if (soundOn) { removeGestureListeners(); return; }
-                    soundOn = true;
-                    removeGestureListeners();
-                    if (st.isPlaying) {
-                        if (st.isMuted) mgr.toggleMute(); // 静音播放中 → 开声
-                    } else {
-                        mgr.togglePlay(); // 没在播 → 播
-                    }
-                } else {
-                    // 空闲触发：静音自动播放（浏览器允许 muted autoplay）
-                    if (!st.isPlaying) {
-                        if (!st.isMuted) mgr.toggleMute();
-                        mgr.togglePlay();
-                    }
-                }
-            } catch (e) { /* noop */ }
-        }
-
-        function onGesture() { ensureInit(true); }
         function removeGestureListeners() {
             document.removeEventListener('pointerdown', onGesture, true);
             document.removeEventListener('keydown', onGesture, true);
         }
+
+        function startPlayback(fromGesture) {
+            if (!cfg.autoplay) return;
+            try {
+                var st = mgr.getState ? mgr.getState() : null;
+                if (!st || !st.initialized || !st.playlist || !st.playlist.length) return;
+                if (fromGesture || wantSound) {
+                    removeGestureListeners();
+                    mgr.unmuteAndPlay(); // 幂等：开声+播放
+                } else {
+                    mgr.mutedPlay(); // 空闲触发：静音自动播放
+                }
+            } catch (e) { /* noop */ }
+        }
+
+        function ensureInit(fromGesture) {
+            if (fromGesture) wantSound = true;
+            if (!initStarted) {
+                initStarted = true;
+                Promise.resolve(mgr.init()).then(function () { startPlayback(fromGesture); });
+            } else if (fromGesture) {
+                // init 已完成或进行中：完成时 tryStart 已由 then 覆盖；
+                // 这里处理"init 早已完成"的常见情况
+                startPlayback(true);
+            }
+        }
+
+        function onGesture() { ensureInit(true); }
         document.addEventListener('pointerdown', onGesture, true);
         document.addEventListener('keydown', onGesture, true);
 

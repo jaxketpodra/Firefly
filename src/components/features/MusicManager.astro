@@ -331,6 +331,37 @@ const managerConfigStr = JSON.stringify({
         emit('fm:volume', { volume: state.volume, isMuted: state.isMuted });
     }
 
+    // 静音播放（用于 autoplay：浏览器允许 muted autoplay）
+    // 幂等：已在播则不动
+    function mutedPlay() {
+        if (!audio.paused) return;
+        state.isMuted = true;
+        audio.muted = true;
+        emit('fm:volume', { volume: state.volume, isMuted: true });
+        audio.play().then(function () {
+            state.isPlaying = true;
+            state.error = null;
+            emit('fm:play-state', { isPlaying: true });
+        }).catch(function () { /* autoplay blocked even muted - give up silently */ });
+    }
+
+    // 取消静音并播放（用户手势后调用）。幂等：反复调用结果一致
+    function unmuteAndPlay() {
+        state.isMuted = false;
+        audio.muted = false;
+        emit('fm:volume', { volume: state.volume, isMuted: false });
+        if (audio.paused) {
+            audio.play().then(function () {
+                state.isPlaying = true;
+                state.error = null;
+                emit('fm:play-state', { isPlaying: true });
+            }).catch(function (e) {
+                if (e.name === 'AbortError') return;
+                console.warn('Playback failed:', e);
+            });
+        }
+    }
+
     function seek(percent) {
         if (!audio.duration) return;
         audio.currentTime = Math.max(0, Math.min(1, percent)) * audio.duration;
@@ -488,6 +519,8 @@ const managerConfigStr = JSON.stringify({
         cyclePlayMode: cyclePlayMode,
         setVolume: setVolume,
         toggleMute: toggleMute,
+        mutedPlay: mutedPlay,
+        unmuteAndPlay: unmuteAndPlay,
         seek: seek,
         seekToTime: seekToTime,
         playTrackByIndex: playTrackByIndex,
