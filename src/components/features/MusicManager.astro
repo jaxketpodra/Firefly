@@ -131,43 +131,65 @@ const managerConfigStr = JSON.stringify({
     }
 
     // ── Meting fetch ─────────────────────────────────────────
+    // 主 API 可能直接挂起（2026-09-03 api.i-meto.com 实测超时无响应），
+    // 所以所有 API 并发请求 + 每条 10s 超时，谁先返回有效歌单用谁，
+    // 避免 loading 转圈永远等一个死掉的接口。
     async function fetchMetingData() {
         if (!config.meting) return;
         var m = config.meting;
-        var apis = [m.api].concat(m.fallbackApis || []);
+        var apis = [m.api].concat(m.fallbackApis || []).filter(function (u) { return !!u; });
 
-        for (var i = 0; i < apis.length; i++) {
-            var baseApi = apis[i];
-            if (!baseApi) continue;
-            try {
-                var fetchUrl = baseApi
-                    .replace(':server', m.server)
-                    .replace(':type', m.type)
-                    .replace(':id', m.id)
-                    .replace(':r', Math.random());
-                if (m.auth) fetchUrl += '&auth=' + m.auth;
+        function fetchOne(baseApi) {
+            var fetchUrl = baseApi
+                .replace(':server', m.server)
+                .replace(':type', m.type)
+                .replace(':id', m.id)
+                .replace(':r', Math.random());
+            if (m.auth) fetchUrl += '&auth=' + m.auth;
 
-                var res = await fetch(fetchUrl);
+            var controller = new AbortController();
+            var timeoutId = setTimeout(function () { controller.abort(); }, 10000);
+
+            return fetch(fetchUrl, { signal: controller.signal }).then(function (res) {
+                clearTimeout(timeoutId);
                 if (!res.ok) throw new Error('HTTP ' + res.status);
-                var data = await res.json();
-
-                if (Array.isArray(data) && data.length > 0) {
-                    state.playlist = data.map(function (item) {
-                        return {
-                            name: item.title || item.name || 'Unknown',
-                            artist: item.author || item.artist || 'Unknown',
-                            url: item.url,
-                            pic: item.pic || item.cover || '',
-                            lrc: item.lrc
-                        };
-                    });
-                    return;
+                return res.json();
+            }).then(function (data) {
+                if (!Array.isArray(data) || data.length === 0) {
+                    throw new Error('Empty playlist from ' + baseApi);
                 }
-            } catch (e) {
+                return data;
+            }).catch(function (e) {
+                clearTimeout(timeoutId);
                 console.warn('Meting API failed for ' + baseApi, e);
-            }
+                throw e;
+            });
         }
-        throw new Error('All Meting APIs failed');
+
+        var data;
+        if (Promise.any) {
+            data = await Promise.any(apis.map(fetchOne));
+        } else {
+            // 老浏览器兜底：顺序尝试，每条仍有 10s 超时
+            var lastError = null;
+            for (var i = 0; i < apis.length; i++) {
+                try {
+                    data = await fetchOne(apis[i]);
+                    break;
+                } catch (e) { lastError = e; }
+            }
+            if (!data) throw lastError || new Error('All Meting APIs failed');
+        }
+
+        state.playlist = data.map(function (item) {
+            return {
+                name: item.title || item.name || 'Unknown',
+                artist: item.author || item.artist || 'Unknown',
+                url: item.url,
+                pic: item.pic || item.cover || '',
+                lrc: item.lrc
+            };
+        });
     }
 
     // ── Lyrics ───────────────────────────────────────────────

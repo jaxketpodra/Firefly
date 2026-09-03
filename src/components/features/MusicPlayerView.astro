@@ -604,6 +604,8 @@ const viewConfigStr = JSON.stringify({
         });
 
         on('fm:error', function (e) {
+            // 出错也要把 loading 关掉，否则转圈会永远盖住播放器
+            setLoading(false);
             ui.title.innerText = e.detail.message || cfg.i18n.error;
         });
 
