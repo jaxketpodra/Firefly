@@ -1,0 +1,19 @@
+---
+import AnimaExplorer from "@components/pages/AnimaExplorer.svelte";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+
+const title = "生图图鉴";
+const description = "Anima 系模型提示词图鉴：服装 / 姿势 / 背景，配图速查，一键复制 tags";
+---
+
+<MainGridLayout title={title} description={description}>
+	<div class="min-h-[80vh]">
+		<div class="card-base p-6 mb-4">
+			<h1 class="text-2xl font-bold text-90 mb-1">🎨 生图图鉴</h1>
+			<p class="text-50 text-sm">
+				Anima 系模型提示词库 · 服装 / 姿势 / 背景配图速查 · 点击卡片图看大图，点按钮复制 tags
+			</p>
+		</div>
+		<AnimaExplorer client:load />
+	</div>
+</MainGridLayout>

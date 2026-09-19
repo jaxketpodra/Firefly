@@ -62,6 +62,9 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			// 相册
 			LinkPresets.Gallery,
 
+			// 生图图鉴
+			LinkPresets.Anima,
+
 			// 书签导航
 			LinkPresets.Booknav,
 
@@ -196,6 +199,11 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		url: "/gallery/",
 		icon: "material-symbols:photo-library",
 		pageKey: "gallery",
+	},
+	Anima: {
+		name: "生图图鉴",
+		url: "/anima/",
+		icon: "material-symbols:prompt-suggestion",
 	},
 	Booknav: {
 		name: "书签导航",
