@@ -34,9 +34,9 @@ export const profileConfig: ProfileConfig = {
 			showName: false,
 		},
 		{
-			name: "RSS",
-			icon: "fa7-solid:rss",
-			url: "/rss/",
+			name: "生图图鉴",
+			icon: "material-symbols:prompt-suggestion",
+			url: "/anima/",
 			showName: false,
 		},
 	],

@@ -80,9 +80,25 @@ $: pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
 $: if (page > pageCount) page = pageCount;
 $: paged = filtered.slice((page - 1) * pageSize, page * pageSize);
 
+async function copyChar(e: Entry, withTags: boolean) {
+	const base = e.trigger || e.name;
+	const text = withTags && e.tags ? `${base}, ${e.tags}` : base;
+	try {
+		await navigator.clipboard.writeText(text);
+	} catch {
+		const ta = document.createElement("textarea");
+		ta.value = text;
+		document.body.appendChild(ta);
+		ta.select();
+		document.execCommand("copy");
+		document.body.removeChild(ta);
+	}
+	copiedId = active + e.id + (withTags ? "+t" : "");
+	setTimeout(() => (copiedId = ""), 1500);
+}
+
 async function copyTags(e: Entry) {
-	const text =
-		active === "character" && e.trigger ? `${e.trigger}, ${e.tags}` : e.tags;
+	const text = e.tags;
 	try {
 		await navigator.clipboard.writeText(text);
 	} catch {
@@ -165,40 +181,65 @@ onMount(() => loadLib(active));
 		<div class="flex flex-col gap-2">
 			{#each paged as e (active + e.id)}
 				<div
-					class="rounded-lg px-4 py-2.5 bg-[var(--card-bg)] border border-black/5 dark:border-white/10
-						hover:shadow-md transition-all flex flex-col gap-1"
+					class="rounded-lg px-3 py-2.5 bg-[var(--card-bg)] border border-black/5 dark:border-white/10
+						hover:shadow-md transition-all flex gap-3 items-start"
 				>
-					<div class="flex items-center gap-2 flex-wrap">
-						<span class="font-medium text-90">{e.name}</span>
-						{#if e.copyright}
-							<span
-								class="text-xs px-1.5 py-0.5 rounded bg-[var(--primary)]/10 text-[var(--primary)]"
-								>{e.copyright}</span
+					{#if e.preview}
+						<a href={e.preview} target="_blank" rel="noopener" class="shrink-0">
+							<img
+								src={e.preview}
+								alt={e.name}
+								loading="lazy"
+								class="w-16 h-16 rounded-lg object-cover bg-black/5 dark:bg-white/5"
+							/>
+						</a>
+					{/if}
+					<div class="flex flex-col gap-1 flex-1 min-w-0">
+						<div class="flex items-center gap-2 flex-wrap">
+							<span class="font-medium text-90">{e.name}</span>
+							{#if e.copyright}
+								<span
+									class="text-xs px-1.5 py-0.5 rounded bg-[var(--primary)]/10 text-[var(--primary)]"
+									>{e.copyright}</span
+								>
+							{/if}
+							{#if e.hair}
+								<span class="text-xs text-50">{e.hair} hair</span>
+							{/if}
+							{#if e.eye}
+								<span class="text-xs text-50">{e.eye} eyes</span>
+							{/if}
+							{#if e.post_count}
+								<span class="text-xs text-50 ml-auto"
+									>🔥 {e.post_count.toLocaleString()}</span
+								>
+							{/if}
+							<button
+								class="px-2 py-1 rounded-md text-xs font-medium transition-colors
+									{copiedId === active + e.id
+									? 'bg-green-500 text-white'
+									: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
+								on:click={() => copyChar(e, false)}
 							>
-						{/if}
-						{#if e.hair}
-							<span class="text-xs text-50">{e.hair} hair</span>
-						{/if}
-						{#if e.eye}
-							<span class="text-xs text-50">{e.eye} eyes</span>
-						{/if}
-						{#if e.post_count}
-							<span class="text-xs text-50 ml-auto"
-								>🔥 {e.post_count.toLocaleString()}</span
+								{copiedId === active + e.id ? "✓" : "复制 trigger"}
+							</button>
+							<button
+								class="px-2 py-1 rounded-md text-xs font-medium transition-colors
+									{copiedId === active + e.id + '+t'
+									? 'bg-green-500 text-white'
+									: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
+								on:click={() => copyChar(e, true)}
+								title="trigger + 官方tags（含服装）"
 							>
-						{/if}
-						<button
-							class="px-2 py-1 rounded-md text-xs font-medium transition-colors
-								{copiedId === active + e.id
-								? 'bg-green-500 text-white'
-								: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
-							on:click={() => copyTags(e)}
+								{copiedId === active + e.id + "+t" ? "✓" : "复制 +tags"}
+							</button>
+						</div>
+						<div
+							class="text-xs text-50 line-clamp-2 break-all"
+							title={e.trigger + ", " + e.tags}
 						>
-							{copiedId === active + e.id ? "✓ 已复制" : "复制 trigger+tags"}
-						</button>
-					</div>
-					<div class="text-xs text-50 line-clamp-2 break-all" title={e.trigger + ", " + e.tags}>
-						{e.trigger}{e.tags ? ", " + e.tags : ""}
+							{e.trigger}{e.tags ? ", " + e.tags : ""}
+						</div>
 					</div>
 				</div>
 			{/each}
