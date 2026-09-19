@@ -358,11 +358,14 @@ const { state, backgroundImages, title, bannerPostMeta } = Astro.props;
 
             function stopAutoPlay() {
                 appState.isPlaying = false;
-                if (appState.autoPlayTimer) {
-                    clearTimeout(appState.autoPlayTimer);
-                    appState.autoPlayTimer = null;
-                }
+                if (appState.autoPlayTimer) { clearTimeout(appState.autoPlayTimer); appState.autoPlayTimer = null; }
             }
+
+            // 后台标签页暂停轮播（定时器被节流且浪费GPU），切回前台恢复——防切回卡死的防御之一
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) { stopAutoPlay(); }
+                else { startAutoPlay(); }
+            });
 
             // 键盘控制
             document.addEventListener('keydown', function(e) {

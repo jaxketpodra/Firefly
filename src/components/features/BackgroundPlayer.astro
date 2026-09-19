@@ -183,6 +183,16 @@ const tLoadError = i18n(I18nKey.videoLoadError);
 			}
 		}
 
+		// 后台标签页暂停背景视频（GPU解码挂起），切回前台恢复播放——防切回假死的防御之一
+		document.addEventListener("visibilitychange", function () {
+			if (!video) return;
+			if (document.hidden) {
+				if (isPlaying) video.pause();
+			} else {
+				if (isPlaying) video.play().catch(function () {});
+			}
+		});
+
 		function onError() {
 			errorCount++;
 			if (isMultiple && errorCount < urlList.length) {
