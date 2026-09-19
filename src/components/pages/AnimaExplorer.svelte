@@ -62,7 +62,11 @@ function switchLib(key: LibKey) {
 }
 
 $: entries = data[active] || [];
-$: categories = [...new Set(entries.flatMap((e) => e.categories || []))].sort();
+$: catCount = entries.reduce((acc, e) => {
+	(e.categories || []).forEach((c) => acc.set(c, (acc.get(c) || 0) + 1));
+	return acc;
+}, new Map());
+$: categories = [...catCount.entries()].sort((a, b) => b[1] - a[1]).map(([c]) => c);
 $: filtered = entries.filter((e) => {
 	if (category && !(e.categories || []).includes(category)) return false;
 	if (!keyword.trim()) return true;
@@ -73,6 +77,7 @@ $: filtered = entries.filter((e) => {
 		e.tags?.toLowerCase().includes(k) ||
 		e.tags_zh?.toLowerCase().includes(k) ||
 		e.copyright?.toLowerCase().includes(k) ||
+		e.copyright_zh?.toLowerCase().includes(k) ||
 		e.trigger?.toLowerCase().includes(k)
 	);
 });
@@ -152,16 +157,16 @@ onMount(() => loadLib(active));
 					border border-black/10 dark:border-white/10 outline-none focus:border-[var(--primary)]"
 			/>
 		</div>
-		{#if active !== "character"}
+		{#if categories.length > 0}
 			<select
 				bind:value={category}
 				on:change={() => (page = 1)}
 				class="px-3 py-2 rounded-lg bg-[var(--card-bg)] text-90
 					border border-black/10 dark:border-white/10 outline-none sm:w-56"
 			>
-				<option value="">全部分类</option>
+				<option value="">{active === "character" ? "全部作品" : "全部分类"}</option>
 				{#each categories as c}
-					<option value={c}>{c}</option>
+					<option value={c}>{c}（{catCount.get(c)}）</option>
 				{/each}
 			</select>
 		{/if}
@@ -198,8 +203,10 @@ onMount(() => loadLib(active));
 						{e.name_zh || e.name}
 					</div>
 					{#if active === "character"}
-						{#if e.copyright}
-							<div class="text-xs text-[var(--primary)] truncate">{e.copyright}</div>
+						{#if e.copyright || e.copyright_zh}
+							<div class="text-xs text-[var(--primary)] truncate">
+								{e.copyright_zh || e.copyright}
+							</div>
 						{/if}
 						<div
 							class="text-xs opacity-70 text-90 line-clamp-3 break-all flex-1"
