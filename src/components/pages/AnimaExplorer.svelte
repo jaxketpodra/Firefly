@@ -176,76 +176,7 @@ onMount(() => loadLib(active));
 		{/if}
 	</div>
 
-	<!-- 角色库：紧凑列表 -->
-	{#if active === "character"}
-		<div class="flex flex-col gap-2">
-			{#each paged as e (active + e.id)}
-				<div
-					class="rounded-lg px-3 py-2.5 bg-[var(--card-bg)] border border-black/5 dark:border-white/10
-						hover:shadow-md transition-all flex gap-3 items-start"
-				>
-					{#if e.preview}
-						<a href={e.preview} target="_blank" rel="noopener" class="shrink-0">
-							<img
-								src={e.preview}
-								alt={e.name}
-								loading="lazy"
-								class="w-16 h-16 rounded-lg object-cover bg-black/5 dark:bg-white/5"
-							/>
-						</a>
-					{/if}
-					<div class="flex flex-col gap-1 flex-1 min-w-0">
-						<div class="flex items-center gap-2 flex-wrap">
-							<span class="font-medium text-90">{e.name}</span>
-							{#if e.copyright}
-								<span
-									class="text-xs px-1.5 py-0.5 rounded bg-[var(--primary)]/10 text-[var(--primary)]"
-									>{e.copyright}</span
-								>
-							{/if}
-							{#if e.hair}
-								<span class="text-xs text-50">{e.hair} hair</span>
-							{/if}
-							{#if e.eye}
-								<span class="text-xs text-50">{e.eye} eyes</span>
-							{/if}
-							{#if e.post_count}
-								<span class="text-xs text-50 ml-auto"
-									>🔥 {e.post_count.toLocaleString()}</span
-								>
-							{/if}
-							<button
-								class="px-2 py-1 rounded-md text-xs font-medium transition-colors
-									{copiedId === active + e.id
-									? 'bg-green-500 text-white'
-									: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
-								on:click={() => copyChar(e, false)}
-							>
-								{copiedId === active + e.id ? "✓" : "复制 trigger"}
-							</button>
-							<button
-								class="px-2 py-1 rounded-md text-xs font-medium transition-colors
-									{copiedId === active + e.id + '+t'
-									? 'bg-green-500 text-white'
-									: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
-								on:click={() => copyChar(e, true)}
-								title="trigger + 官方tags（含服装）"
-							>
-								{copiedId === active + e.id + "+t" ? "✓" : "复制 +tags"}
-							</button>
-						</div>
-						<div
-							class="text-xs text-50 line-clamp-2 break-all"
-							title={e.trigger + ", " + e.tags}
-						>
-							{e.trigger}{e.tags ? ", " + e.tags : ""}
-						</div>
-					</div>
-				</div>
-			{/each}
-		</div>
-	{:else}
-	<!-- 卡片墙 -->
+	<!-- 统一卡片墙（角色/服装/姿势/背景同款） -->
 	<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
 		{#each paged as e (active + e.id)}
 			<div
@@ -266,29 +197,61 @@ onMount(() => loadLib(active));
 					<div class="font-medium text-sm text-90 leading-tight">
 						{e.name_zh || e.name}
 					</div>
-					{#if e.name_zh && e.name}
-						<div class="text-xs opacity-50 text-90 truncate">{e.name}</div>
+					{#if active === "character"}
+						{#if e.copyright}
+							<div class="text-xs text-[var(--primary)] truncate">{e.copyright}</div>
+						{/if}
+						<div
+							class="text-xs opacity-70 text-90 line-clamp-3 break-all flex-1"
+							title={e.trigger + ", " + e.tags}
+						>
+							{e.trigger}{e.tags ? ", " + e.tags : ""}
+						</div>
+						<div class="flex gap-1.5 mt-1">
+							<button
+								class="flex-1 px-2 py-1 rounded-md text-xs font-medium transition-colors
+									{copiedId === active + e.id
+									? 'bg-green-500 text-white'
+									: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
+								on:click={() => copyChar(e, false)}
+							>
+								{copiedId === active + e.id ? "✓" : "trigger"}
+							</button>
+							<button
+								class="flex-1 px-2 py-1 rounded-md text-xs font-medium transition-colors
+									{copiedId === active + e.id + '+t'
+									? 'bg-green-500 text-white'
+									: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
+								on:click={() => copyChar(e, true)}
+								title="trigger + 官方tags（含服装）"
+							>
+								{copiedId === active + e.id + "+t" ? "✓" : "+tags"}
+							</button>
+						</div>
+					{:else}
+						{#if e.name_zh && e.name}
+							<div class="text-xs opacity-50 text-90 truncate">{e.name}</div>
+						{/if}
+						<div
+							class="text-xs opacity-70 text-90 line-clamp-3 break-all flex-1"
+							title={e.tags}
+						>
+							{e.tags}
+						</div>
+						<button
+							class="mt-1 px-2 py-1 rounded-md text-xs font-medium transition-colors
+								{copiedId === active + e.id
+								? 'bg-green-500 text-white'
+								: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
+							on:click={() => copyTags(e)}
+						>
+							{copiedId === active + e.id ? "✓ 已复制" : "复制 tags"}
+						</button>
 					{/if}
-					<div
-						class="text-xs opacity-70 text-90 line-clamp-3 break-all flex-1"
-						title={e.tags}
-					>
-						{e.tags}
-					</div>
-					<button
-						class="mt-1 px-2 py-1 rounded-md text-xs font-medium transition-colors
-							{copiedId === active + e.id
-							? 'bg-green-500 text-white'
-							: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
-						on:click={() => copyTags(e)}
-					>
-						{copiedId === active + e.id ? "✓ 已复制" : "复制 tags"}
-					</button>
 				</div>
 			</div>
 		{/each}
 	</div>
-	{/if}
 
 	{#if !loading && filtered.length === 0}
 		<div class="text-center py-16 text-90 opacity-50">
