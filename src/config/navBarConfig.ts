@@ -36,6 +36,9 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		],
 	});
 
+	// 生图图鉴（顶级直达）
+	links.push(LinkPresets.Anima);
+
 	//社交及其子菜单
 	links.push({
 		name: "社交",
@@ -61,9 +64,6 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 
 			// 相册
 			LinkPresets.Gallery,
-
-			// 生图图鉴
-			LinkPresets.Anima,
 
 			// 书签导航
 			LinkPresets.Booknav,

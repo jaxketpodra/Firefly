@@ -10,21 +10,29 @@ interface Entry {
 	tags: string;
 	tags_zh: string;
 	categories: string[];
+	// 角色库专有
+	copyright?: string;
+	post_count?: number;
+	hair?: string;
+	eye?: string;
+	trigger?: string;
 }
 
-type LibKey = "clothing" | "pose" | "background";
+type LibKey = "clothing" | "pose" | "background" | "character";
 
 const libs: { key: LibKey; label: string; icon: string }[] = [
+	{ key: "character", label: "角色", icon: "material-symbols:face" },
 	{ key: "clothing", label: "服装", icon: "material-symbols:apparel" },
 	{ key: "pose", label: "姿势", icon: "material-symbols:accessibility-new" },
 	{ key: "background", label: "背景", icon: "material-symbols:landscape" },
 ];
 
-let active: LibKey = "clothing";
+let active: LibKey = "character";
 let data: Record<LibKey, Entry[] | null> = {
 	clothing: null,
 	pose: null,
 	background: null,
+	character: null,
 };
 let loading = false;
 let keyword = "";
@@ -63,7 +71,9 @@ $: filtered = entries.filter((e) => {
 		e.name?.toLowerCase().includes(k) ||
 		e.name_zh?.toLowerCase().includes(k) ||
 		e.tags?.toLowerCase().includes(k) ||
-		e.tags_zh?.toLowerCase().includes(k)
+		e.tags_zh?.toLowerCase().includes(k) ||
+		e.copyright?.toLowerCase().includes(k) ||
+		e.trigger?.toLowerCase().includes(k)
 	);
 });
 $: pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
@@ -71,11 +81,13 @@ $: if (page > pageCount) page = pageCount;
 $: paged = filtered.slice((page - 1) * pageSize, page * pageSize);
 
 async function copyTags(e: Entry) {
+	const text =
+		active === "character" && e.trigger ? `${e.trigger}, ${e.tags}` : e.tags;
 	try {
-		await navigator.clipboard.writeText(e.tags);
+		await navigator.clipboard.writeText(text);
 	} catch {
 		const ta = document.createElement("textarea");
-		ta.value = e.tags;
+		ta.value = text;
 		document.body.appendChild(ta);
 		ta.select();
 		document.execCommand("copy");
@@ -124,17 +136,19 @@ onMount(() => loadLib(active));
 					border border-black/10 dark:border-white/10 outline-none focus:border-[var(--primary)]"
 			/>
 		</div>
-		<select
-			bind:value={category}
-			on:change={() => (page = 1)}
-			class="px-3 py-2 rounded-lg bg-[var(--card-bg)] text-90
-				border border-black/10 dark:border-white/10 outline-none sm:w-56"
-		>
-			<option value="">全部分类</option>
-			{#each categories as c}
-				<option value={c}>{c}</option>
-			{/each}
-		</select>
+		{#if active !== "character"}
+			<select
+				bind:value={category}
+				on:change={() => (page = 1)}
+				class="px-3 py-2 rounded-lg bg-[var(--card-bg)] text-90
+					border border-black/10 dark:border-white/10 outline-none sm:w-56"
+			>
+				<option value="">全部分类</option>
+				{#each categories as c}
+					<option value={c}>{c}</option>
+				{/each}
+			</select>
+		{/if}
 	</div>
 
 	<!-- 状态行 -->
@@ -146,6 +160,50 @@ onMount(() => loadLib(active));
 		{/if}
 	</div>
 
+	<!-- 角色库：紧凑列表 -->
+	{#if active === "character"}
+		<div class="flex flex-col gap-2">
+			{#each paged as e (active + e.id)}
+				<div
+					class="rounded-lg px-4 py-2.5 bg-[var(--card-bg)] border border-black/5 dark:border-white/10
+						hover:shadow-md transition-all flex flex-col gap-1"
+				>
+					<div class="flex items-center gap-2 flex-wrap">
+						<span class="font-medium text-90">{e.name}</span>
+						{#if e.copyright}
+							<span
+								class="text-xs px-1.5 py-0.5 rounded bg-[var(--primary)]/10 text-[var(--primary)]"
+								>{e.copyright}</span
+							>
+						{/if}
+						{#if e.hair}
+							<span class="text-xs text-50">{e.hair} hair</span>
+						{/if}
+						{#if e.eye}
+							<span class="text-xs text-50">{e.eye} eyes</span>
+						{/if}
+						{#if e.post_count}
+							<span class="text-xs text-50 ml-auto"
+								>🔥 {e.post_count.toLocaleString()}</span
+							>
+						{/if}
+						<button
+							class="px-2 py-1 rounded-md text-xs font-medium transition-colors
+								{copiedId === active + e.id
+								? 'bg-green-500 text-white'
+								: 'bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white'}"
+							on:click={() => copyTags(e)}
+						>
+							{copiedId === active + e.id ? "✓ 已复制" : "复制 trigger+tags"}
+						</button>
+					</div>
+					<div class="text-xs text-50 line-clamp-2 break-all" title={e.trigger + ", " + e.tags}>
+						{e.trigger}{e.tags ? ", " + e.tags : ""}
+					</div>
+				</div>
+			{/each}
+		</div>
+	{:else}
 	<!-- 卡片墙 -->
 	<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
 		{#each paged as e (active + e.id)}
@@ -189,6 +247,7 @@ onMount(() => loadLib(active));
 			</div>
 		{/each}
 	</div>
+	{/if}
 
 	{#if !loading && filtered.length === 0}
 		<div class="text-center py-16 text-90 opacity-50">
