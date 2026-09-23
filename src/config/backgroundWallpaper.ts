@@ -126,7 +126,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 				{
 					name: "图床",
 					icon: "material-symbols:image-outline",
-					url: "/img/",
+					url: "https://img.akaka.xin",
 					showName: true,
 				},
 				{

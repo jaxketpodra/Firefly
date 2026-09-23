@@ -30,7 +30,7 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "图床",
 			icon: "material-symbols:image-outline",
-			url: "/img/",
+			url: "https://img.akaka.xin",
 			showName: false,
 		},
 		{
