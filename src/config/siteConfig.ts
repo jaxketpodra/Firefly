@@ -46,7 +46,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "记录生活，分享热爱",
 
 	// 站点 URL
-	site_url: "https://akaka.ccwu.cc",
+	site_url: "https://akaka.xin",
 
 	// 站点描述
 	description:
