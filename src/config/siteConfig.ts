@@ -46,7 +46,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "记录生活，分享热爱",
 
 	// 站点 URL
-	site_url: "https://blog.akakahome.cc.cd",
+	site_url: "https://akaka.ccwu.cc",
 
 	// 站点描述
 	description:
@@ -90,7 +90,7 @@ export const siteConfig: SiteConfig = {
 	favicon: [
 		{
 			// 图标文件路径
-			src: "https://img.akakahome.cc.cd/file/1787974678952_avatar-32.png",
+			src: "/img/file/1787974678952_avatar-32.png",
 			// 可选，指定主题 'light' | 'dark'
 			// theme: "light",
 			// 可选，图标大小
@@ -111,7 +111,7 @@ export const siteConfig: SiteConfig = {
 		// 使用 Astro 图标库时不需要设置 valueDark，图标会自动跟随主题亮暗色切换
 		logo: {
 			type: "url",
-			value: "https://img.akakahome.cc.cd/file/1787974676007_avatar.jpg",
+			value: "/img/file/1787974676007_avatar.jpg",
 			alt: "阿咔咔",
 		},
 		// 导航栏标题

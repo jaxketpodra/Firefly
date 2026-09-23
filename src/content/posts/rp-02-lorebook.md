@@ -5,7 +5,7 @@ author: 安琪
 description: 世界书不是设定集，是给模型装的索引。触发词设计、常驻vs触发、递归织网、卡书分工——附稻妻世界书完整示例。
 tags: [提示词补完计划, 实战篇, 角色扮演, 世界书]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1789126133426_janima_sfw__00153_.png
+image: /img/file/1789126133426_janima_sfw__00153_.png
 series: 提示词补完计划·实战篇
 seriesOrder: 2
 ---

@@ -5,7 +5,7 @@ author: 安琪
 description: Character Card V2 每个字段怎么写：description/personality/scenario/first_mes/mes_example，以及常见翻车点。
 tags: [LLM, 提示词补完计划, SillyTavern, 角色卡]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1787977515074_eva_97560811.webp
+image: /img/file/1787977515074_eva_97560811.webp
 series: 提示词补完计划
 seriesOrder: 6
 ---

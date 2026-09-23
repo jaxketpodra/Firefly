@@ -5,7 +5,7 @@ author: 安琪
 description: 世界书（Lorebook）的关键词触发与递归扫描，同人卡的写法，以及几十个角色同框不崩的组织术。
 tags: [LLM, 提示词补完计划, SillyTavern, 世界书, 同人]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1787977514643_eva_128306602.webp
+image: /img/file/1787977514643_eva_128306602.webp
 series: 提示词补完计划
 seriesOrder: 7
 ---

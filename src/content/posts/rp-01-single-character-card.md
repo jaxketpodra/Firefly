@@ -5,7 +5,7 @@ author: 安琪
 description: 七个模块，六个是规则，只有一个是资料。身份定义、变量引用、可拆装的预设思维——附雷电影完整示例。
 tags: [提示词补完计划, 实战篇, 角色扮演, 角色卡]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1789124323934_janima_sfw__00152_.png
+image: /img/file/1789124323934_janima_sfw__00152_.png
 series: 提示词补完计划·实战篇
 seriesOrder: 1
 ---

@@ -39,33 +39,33 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	src: {
 		// 桌面背景图片（横版 EVA 画集，8 张轮播）2026-08-29
 		desktop: [
-			"https://img.akakahome.cc.cd/file/1787977490826_eva_94219701.webp",
-			"https://img.akakahome.cc.cd/file/1787977500001_eva_47402905.webp",
-			"https://img.akakahome.cc.cd/file/1787977498016_eva_80472549.webp",
-			"https://img.akakahome.cc.cd/file/1787977502140_eva_98473741.webp",
-			"https://img.akakahome.cc.cd/file/1787977511060_eva_94239910.webp",
-			"https://img.akakahome.cc.cd/file/1787977515074_eva_97560811.webp",
-			"https://img.akakahome.cc.cd/file/1787977514643_eva_128306602.webp",
-			"https://img.akakahome.cc.cd/file/1787977514675_eva_142698411.webp",
+			"/img/file/1787977490826_eva_94219701.webp",
+			"/img/file/1787977500001_eva_47402905.webp",
+			"/img/file/1787977498016_eva_80472549.webp",
+			"/img/file/1787977502140_eva_98473741.webp",
+			"/img/file/1787977511060_eva_94239910.webp",
+			"/img/file/1787977515074_eva_97560811.webp",
+			"/img/file/1787977514643_eva_128306602.webp",
+			"/img/file/1787977514675_eva_142698411.webp",
 		],
 		// 移动背景图片（竖版 EVA 画集，16 张轮播）
 		mobile: [
-			"https://img.akakahome.cc.cd/file/1787977522517_eva_89174443.webp",
-			"https://img.akakahome.cc.cd/file/1787977526748_eva_81089817.webp",
-			"https://img.akakahome.cc.cd/file/1787977531630_eva_87390668.webp",
-			"https://img.akakahome.cc.cd/file/1787977537256_eva_88814719.webp",
-			"https://img.akakahome.cc.cd/file/1787977535305_eva_91517993.webp",
-			"https://img.akakahome.cc.cd/file/1787977546694_eva_88853525.webp",
-			"https://img.akakahome.cc.cd/file/1787977546250_eva_67438350.webp",
-			"https://img.akakahome.cc.cd/file/1787977546608_eva_133371256.webp",
-			"https://img.akakahome.cc.cd/file/1787977555863_eva_125331064.webp",
-			"https://img.akakahome.cc.cd/file/1787977554028_eva_129264046.webp",
-			"https://img.akakahome.cc.cd/file/1787977562558_eva_97353822.webp",
-			"https://img.akakahome.cc.cd/file/1787977566312_eva_133258822.webp",
-			"https://img.akakahome.cc.cd/file/1787977564419_eva_86659485.webp",
-			"https://img.akakahome.cc.cd/file/1787977564324_eva_61340667.webp",
-			"https://img.akakahome.cc.cd/file/1787977573296_eva_97597871.webp",
-			"https://img.akakahome.cc.cd/file/1787977571886_eva_134502725.webp",
+			"/img/file/1787977522517_eva_89174443.webp",
+			"/img/file/1787977526748_eva_81089817.webp",
+			"/img/file/1787977531630_eva_87390668.webp",
+			"/img/file/1787977537256_eva_88814719.webp",
+			"/img/file/1787977535305_eva_91517993.webp",
+			"/img/file/1787977546694_eva_88853525.webp",
+			"/img/file/1787977546250_eva_67438350.webp",
+			"/img/file/1787977546608_eva_133371256.webp",
+			"/img/file/1787977555863_eva_125331064.webp",
+			"/img/file/1787977554028_eva_129264046.webp",
+			"/img/file/1787977562558_eva_97353822.webp",
+			"/img/file/1787977566312_eva_133258822.webp",
+			"/img/file/1787977564419_eva_86659485.webp",
+			"/img/file/1787977564324_eva_61340667.webp",
+			"/img/file/1787977573296_eva_97597871.webp",
+			"/img/file/1787977571886_eva_134502725.webp",
 		],
 		// 背景视频播放地址
 		// 支持单个视频路径（字符串）、多个视频循环（数组）或横竖分设（对象 desktop/mobile）
@@ -73,8 +73,8 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 		// playerUrl: "/assets/videos/firefly.mp4",
 		// 哥哥的 Wallpaper Engine 视频（横屏=桌面，竖屏=手机）2026-08-29
 		playerUrl: {
-			desktop: "https://img.akakahome.cc.cd/file/1787976180042_ask_v2_web.mp4",
-			mobile: "https://img.akakahome.cc.cd/file/1787976218043_eva_mobile_web.mp4",
+			desktop: "/img/file/1787976180042_ask_v2_web.mp4",
+			mobile: "/img/file/1787976218043_eva_mobile_web.mp4",
 		},
 	},
 	// 横幅壁纸和全屏壁纸共享配置
@@ -126,7 +126,7 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 				{
 					name: "图床",
 					icon: "material-symbols:image-outline",
-					url: "https://img.akakahome.cc.cd",
+					url: "/img/",
 					showName: true,
 				},
 				{

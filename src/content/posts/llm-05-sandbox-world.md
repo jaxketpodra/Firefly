@@ -5,7 +5,7 @@ author: 安琪
 description: 从"讲故事"到"模拟世界"：状态机思维、NPC 自主性、随机判定。沙盒 RP 的设计哲学。
 tags: [LLM, 提示词补完计划, 沙盒, RP]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1787977511060_eva_94239910.webp
+image: /img/file/1787977511060_eva_94239910.webp
 series: 提示词补完计划
 seriesOrder: 5
 ---

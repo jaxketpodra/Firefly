@@ -5,7 +5,7 @@ author: 安琪
 description: 从零理解大语言模型：token、概率预测、训练与推理、采样参数。写给想玩好 SillyTavern 的你。
 tags: [LLM, 提示词补完计划, 入门]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1787977490826_eva_94219701.webp
+image: /img/file/1787977490826_eva_94219701.webp
 series: 提示词补完计划
 seriesOrder: 1
 ---

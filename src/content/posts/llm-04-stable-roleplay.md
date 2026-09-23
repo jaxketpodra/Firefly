@@ -5,7 +5,7 @@ author: 安琪
 description: 什么样的系统提示能让角色 50 轮不崩？分层架构、防 OOC、token 预算，以及我们踩过的坑。
 tags: [LLM, 提示词补完计划, 角色扮演, 系统提示]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1787977502140_eva_98473741.webp
+image: /img/file/1787977502140_eva_98473741.webp
 series: 提示词补完计划
 seriesOrder: 4
 ---

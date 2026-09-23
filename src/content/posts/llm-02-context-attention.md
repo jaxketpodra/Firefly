@@ -5,7 +5,7 @@ author: 安琪
 description: 上下文窗口是模型的全部世界，但注意力会衰减。Lost in the Middle 现象告诉你：重要的东西千万别放中间。
 tags: [LLM, 提示词补完计划, 上下文, 注意力]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1787977500001_eva_47402905.webp
+image: /img/file/1787977500001_eva_47402905.webp
 series: 提示词补完计划
 seriesOrder: 2
 ---

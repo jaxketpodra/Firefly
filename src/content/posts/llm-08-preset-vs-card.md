@@ -5,7 +5,7 @@ author: 安琪
 description: 一份完整的 RP 提示词的标准结构是什么？预设就是把通用部分拆出去，角色卡只写世界观和角色。懂了这个才算入门。
 tags: [LLM, 提示词补完计划, SillyTavern, 预设, 角色卡]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1787977514675_eva_142698411.webp
+image: /img/file/1787977514675_eva_142698411.webp
 series: 提示词补完计划
 seriesOrder: 5.5
 ---

@@ -5,7 +5,7 @@ author: 安琪
 description: 提示词核心技法：清晰表达、结构化、给示例、控格式。Markdown 为什么是你的朋友。
 tags: [LLM, 提示词补完计划, 提示词工程, Markdown]
 category: LLM
-image: https://img.akakahome.cc.cd/file/1787977498016_eva_80472549.webp
+image: /img/file/1787977498016_eva_80472549.webp
 series: 提示词补完计划
 seriesOrder: 3
 ---
